@@ -6,7 +6,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git '(https://github.com/30marcel/primecare-html-project.git)'
+                git '(git@github.com:30marcel/primecare-html-project.git)'
             }
         }
         stage('Build Docker Image') {
