@@ -1,29 +1,27 @@
 pipeline {
     agent any
-    environment {
-        DOCKERHUB_CREDENTIALS = credentials('Dockerhub')
+    environment{
+      DOCKERHUB_CREDENTIALS = credentials('Dockerhub')
     }
     stages {
-        stage('Checkout') {
-            steps {
-                git '(git@github.com:30marcel/primecare-html-project.git)'
-            }
-        }
-        stage('Build Docker Image') {
+        stage('Build') {
             steps {
                 sh 'docker build -t melong123/web-app:1.0.3 .'
             }
         }
-        stage('Login to Docker Hub') {
+        stage('Login') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'Dockerhub', passwordVariable: 'DOCKERHUB_PSW', usernameVariable: 'DOCKERHUB_USR')]) {
-                    sh 'echo $DOCKERHUB_PSW | docker login -u $DOCKERHUB_USR --password-stdin'
-                }
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
             }
         }
-        stage('Push Docker Image') {
+        stage('Push') {
             steps {
                 sh 'docker push melong123/web-app:1.0.3'
+            }
+        }
+        stage('Logout') {
+            steps {
+                sh 'docker logout'
             }
         }
     }
